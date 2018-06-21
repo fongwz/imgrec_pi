@@ -13,7 +13,7 @@ def getBool(prompt):
 
 def createFace():
 	#opening the image
-	jpgfile = open("unlisted.jpg",'rb')
+	jpgfile = open("image.jpg",'rb')
 	jpgdata = jpgfile.read()
 	b64_1 = base64.b64encode(jpgdata)
 
