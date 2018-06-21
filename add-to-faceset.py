@@ -4,10 +4,16 @@ import base64
 import json
 
 #"https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&h=350" sample url
+def getBool(prompt):
+	while True:
+		try:
+			return {"y":True, "n":False}[raw_input(prompt).lower()]
+		except KeyError:
+			print "Please input y/n only."
 
 def createFace():
 	#opening the image
-	jpgfile = open("test1.jpg",'rb')
+	jpgfile = open("unlisted.jpg",'rb')
 	jpgdata = jpgfile.read()
 	b64_1 = base64.b64encode(jpgdata)
 
@@ -70,6 +76,32 @@ def addToFaceSet(faceset_token, face_token):
 	print "Successfully added face to faceset :)"
 	return
 
+def checkFaceExists(faceset_token, face_token):
+	print "Checking if face exists in faceset.."
+	url="https://api-us.faceplusplus.com/facepp/v3/search"
+	payload={
+			'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
+			,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"
+			,'face_token':face_token
+			,'faceset_token':faceset_token			
+			}
+	response = requests.post(url, data=payload)
+	print(response.status_code, response.reason)
+	data = json.loads(response.text)
+	print("threshold for user: %s is at: %f" % (data["results"][0]["user_id"], data["results"][0]["confidence"]))
+	#set duplicate threshold to be 87%
+	if (data["results"][0]["confidence"] > 87.0):
+		print "There is already a person with a highly similar face in the faceset."
+	else:
+		print "Face does not exist in faceset"
+
+	if getBool("Do you want to add this person into the faceset?(y/n) "):
+		print "adding.."
+		return True
+	else:
+		print "not adding..."
+		return False
+	return
 #######################main program###########################
 
 try:
@@ -93,5 +125,6 @@ data = json.loads(response.text)
 print("Obtained faceset token: %s" %data["facesets"][0]["faceset_token"])
 faceset_token = data["facesets"][0]["faceset_token"]
 
-#add face to faceset
-addToFaceSet(faceset_token, face_token)
+#check if face already exists in faceset(set minimum 87% confidence interval)
+if checkFaceExists(faceset_token, face_token):
+	addToFaceSet(faceset_token, face_token)
