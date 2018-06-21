@@ -44,4 +44,7 @@ response = requests.post(url, data=payload)
 print(response.status_code, response.reason)
 data = json.loads(response.text)
 print(data)
+print "---------------------------------------------"
+if data["results"][0]["confidence"] > 87.0:
+	print("Matched face with user_id: %s at confidence level: %f" % (data["results"][0]["user_id"], data["results"][0]["confidence"]))
 
