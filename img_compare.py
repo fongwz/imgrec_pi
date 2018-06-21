@@ -2,6 +2,17 @@ from PIL import Image
 import requests
 import base64
 import json
+from picamera import PiCamera
+from time import sleep
+
+#taking photo of user to process into api
+print "------------Starting up camera--------------"
+camera = PiCamera()
+camera.start_preview()
+sleep(2)
+camera.capture('image.jpg')
+camera.stop_preview()
+print "------------Picture taken...----------------"
 
 #get faceset token first
 url="https://api-us.faceplusplus.com/facepp/v3/faceset/getfacesets"
@@ -17,7 +28,7 @@ faceset_token = data["facesets"][0]["faceset_token"]
 print "---------------------------------------------"
 
 #search faceset for highest compatibility face
-jpgfile = open("test2.jpg",'rb')
+jpgfile = open("image.jpg",'rb')
 jpgdata = jpgfile.read()
 b64 = base64.b64encode(jpgdata)
 
@@ -33,3 +44,4 @@ response = requests.post(url, data=payload)
 print(response.status_code, response.reason)
 data = json.loads(response.text)
 print(data)
+
