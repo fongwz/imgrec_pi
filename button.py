@@ -8,6 +8,7 @@ import threading
 flag = 0;
 
 def my_callback(channel):
+	global flag
 	flag=1
 	print "button pressed"
 
