@@ -1,9 +1,11 @@
-import json
-from picamera import PiCamera
-from time import sleep
 import RPi.GPIO as GPIO
 import time
 import threading
+from PIL import Image
+import requests
+import base64
+import json
+from picamera import PiCamera
 
 flag = 0;
 
