@@ -9,7 +9,8 @@ flag = 0;
 
 def my_callback(channel):
 	global flag
-	flag=1
+	if flag == 0:
+		flag=1
 	print "button pressed"
 
 ##########setup############
@@ -20,6 +21,6 @@ GPIO.add_event_detect(25, GPIO.RISING, callback=my_callback, bouncetime=200)
 
 
 while(1):
-	if flag > 0:
+	if flag == 1:
 		print "handled event"
 		flag = 0
