@@ -49,13 +49,13 @@ def check_quality():
 	try:
 		if not data["faces"]:
 			print("no faces found")
-			return
+			return False
 		else :
 			print "quality check passed"
-			return b64
+			return True, b64
 	except KeyError as err:
 		print("something went wrong..:%s" % format(err))
-		return
+		return False
 
 def compare_img(b64):
 	#get faceset token first
@@ -103,7 +103,7 @@ while(1):
 	if flag == 1:
 		print "handled event"
 		try:
-			b64 = check_quality()
+			truefalse, b64 = check_quality()
 			sleep(1) #prevent qps error
 			compare_img(b64)
 			sleep(1) #prevent qps error
