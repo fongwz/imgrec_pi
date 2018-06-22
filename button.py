@@ -20,4 +20,4 @@ GPIO.add_event_detect(25, GPIO.RISING, callback=my_callback, bouncetime=200)
 while(1):
 	if flag > 0:
 		print "handled event"
-		flag = 0;
+		flag = 0
