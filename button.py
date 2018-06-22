@@ -45,14 +45,14 @@ def check_quality():
 
 	data = json.loads(response.text)
 	print(data)
-	print(data["faces"][0]["facequality"]["value"])
-	print(data["faces"][0]["facequality"]["threshold"])
+	print(data["faces"][0]["attributes"]["facequality"]["value"])
+	print(data["faces"][0]["attributes"]["facequality"]["threshold"])
 	print "---------------------------------------"
 	try:
 		if not data["faces"]:
 			print "no faces found"
 			return False
-		elif data["faces"][0]["facequality"]["value"] < data["faces"][0]["facequality"]["threshold"]:
+		elif data["faces"][0]["attributes"]["facequality"]["value"] < data["faces"][0]["attributes"]["facequality"]["threshold"]:
 			print "picture quality fell below threshold"
 			return False
 		else :
