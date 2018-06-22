@@ -119,6 +119,7 @@ try:
 	sleep(1)
 except TypeError as err:
 	print("Could not generate a token or name: {0}".format(err))
+	sys.exit()
 except:
 	print "Unexpected error"
 
