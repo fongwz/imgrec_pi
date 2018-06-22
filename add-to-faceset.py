@@ -107,6 +107,7 @@ def checkFaceExists(faceset_token, face_token):
 try:
 	face_token,name = createFace()
 	print "Successfully generated token and name :)"
+	sleep(1)
 except TypeError as err:
 	print("Could not generate a token or name: {0}".format(err))
 except:
@@ -124,7 +125,10 @@ print(response.status_code, response.reason)
 data = json.loads(response.text)
 print("Obtained faceset token: %s" %data["facesets"][0]["faceset_token"])
 faceset_token = data["facesets"][0]["faceset_token"]
+sleep(1)
 
 #check if face already exists in faceset(set minimum 87% confidence interval)
 if checkFaceExists(faceset_token, face_token):
+	print "Processing..."
+	sleep(1)
 	addToFaceSet(faceset_token, face_token)
