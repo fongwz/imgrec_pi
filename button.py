@@ -42,10 +42,13 @@ def check_quality():
 	data = json.loads(response.text)
 	print(data)
 	print "---------------------------------------"
-	if not data["faces"]:
-		print("no faces found")
-	else :
-		print
+	try:
+		if not data["faces"]:
+			print("no faces found")
+		else :
+			print
+	except KeyError as err:
+		print("something went wrong..:%s" % format(err))
 
 ##########setup############
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
