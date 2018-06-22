@@ -48,7 +48,10 @@ def check_quality():
 	print "---------------------------------------"
 	try:
 		if not data["faces"]:
-			print("no faces found")
+			print "no faces found"
+			return False
+		elif data["faces"][0]["facequality"]["value"] < data["faces"][0]["facequality"]["threshold"]:
+			print "picture quality fell below threshold"
 			return False
 		else :
 			print "quality check passed"
