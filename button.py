@@ -18,4 +18,4 @@ def my_callback(channel):
 	print "button pressed"
 
 while(1):
-	
+	#do nothing
