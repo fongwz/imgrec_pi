@@ -1,15 +1,21 @@
-import RPi.GPIO as GPIO  
-from time import sleep     # this lets us have a time delay (see line 12)  
+import json
+from picamera import PiCamera
+from time import sleep
+import RPi.GPIO as GPIO
+import time
+import threading
+
+
+##########setup############
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
-GPIO.setup(25, GPIO.IN)    # set GPIO 25 as input  
-  
-try:  
-    while True:            # this will carry on until you hit CTRL+C  
-        if GPIO.input(25): # if port 25 == 1  
-            print "Port 25 is 1/GPIO.HIGH/True - button pressed"  
-        else:  
-            #print "Port 25 is 0/GPIO.LOW/False - button not pressed"  
-        sleep(0.1)         # wait 0.1 seconds  
-  
-except KeyboardInterrupt:  
-    GPIO.cleanup()         # clean up after yourself  
+GPIO.setup(25, GPIO.IN)    # set GPIO 25 as input
+flag = 0;
+GPIO.add_event_detect(25, GPIO.RISING, callback=my_callback, bouncetime=200)
+##########################3
+
+def my_callback(channel):
+	flag=1
+	print "button pressed"
+
+while(1):
+	
