@@ -79,21 +79,30 @@ def compare_img(b64):
 	sleep(2) #prevent qps error
 
 	print "now comparing..."
-	url="https://api-us.faceplusplus.com/facepp/v3/search"
-	payload={
-			'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
-			,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
-			,'image_base64': b64
-			,'faceset_token': faceset_token
-			,'return_result_count': 5	
-			}
-	response = requests.post(url, data=payload)
-	print(response.status_code, response.reason)
-	data = json.loads(response.text)
-	print(data)
-	print "---------------------------------------------"
-	if data["results"][0]["confidence"] > 87.0:
-		print("Matched face with user_id: %s at confidence level: %f" % (data["results"][0]["user_id"], data["results"][0]["confidence"]))
+	retry = True;
+	while retry:
+		try:
+			url="https://api-us.faceplusplus.com/facepp/v3/search"
+			payload={
+					'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
+					,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
+					,'image_base64': b64
+					,'faceset_token': faceset_token
+					,'return_result_count': 5	
+					}
+			response = requests.post(url, data=payload)
+			print(response.status_code, response.reason)
+			data = json.loads(response.text)
+			print(data)
+			print "---------------------------------------------"
+			if data["results"][0]["confidence"] > 87.0:
+				print("Matched face with user_id: %s at confidence level: %f" % (data["results"][0]["user_id"], data["results"][0]["confidence"]))
+			else :
+				print "no match for face in faceset"
+			retry = False;
+		except KeyError as err:
+			print "Concurrency limit occurred, trying again after sleeping for 2s..."
+			retry = True;
 
 ##########setup############
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
