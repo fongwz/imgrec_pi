@@ -6,6 +6,7 @@ import requests
 import base64
 import json
 from picamera import PiCamera
+from time import sleep
 
 flag = 0;
 
