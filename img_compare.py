@@ -31,6 +31,8 @@ print "---------------------------------------------"
 jpgfile = open("image.jpg",'rb')
 jpgdata = jpgfile.read()
 b64 = base64.b64encode(jpgdata)
+print "Processing..."
+sleep(1)
 
 url="https://api-us.faceplusplus.com/facepp/v3/search"
 payload={
