@@ -103,6 +103,7 @@ def compare_img(b64):
 		except KeyError as err:
 			print "Concurrency limit occurred, trying again after sleeping for 2s..."
 			retry = True;
+			sleep(2)
 
 ##########setup############
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
