@@ -2,8 +2,19 @@ from PIL import Image
 import requests
 import base64
 import json
+from picamera import PiCamera
+from time import sleep
 
-jpgfile = open("test3.jpg",'rb')
+#taking photo of user to process into api
+print "------------Starting up camera--------------"
+camera = PiCamera()
+camera.start_preview()
+sleep(2)
+camera.capture('image.jpg')
+camera.stop_preview()
+print "------------Picture taken...----------------"
+
+jpgfile = open("image.jpg",'rb')
 jpgdata = jpgfile.read()
 b64 = base64.b64encode(jpgdata)
 
