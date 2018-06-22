@@ -71,7 +71,7 @@ def compare_img(b64):
 	print("Faceset token is: %s" % data["facesets"][0]["faceset_token"])
 	faceset_token = data["facesets"][0]["faceset_token"]
 	print "---------------------------------------------"
-	sleep(1) #prevent qps error
+	sleep(2) #prevent qps error
 
 	print "now comparing..."
 	url="https://api-us.faceplusplus.com/facepp/v3/search"
@@ -104,9 +104,9 @@ while(1):
 		print "handled event"
 		try:
 			truefalse, b64 = check_quality()
-			sleep(1) #prevent qps error
+			sleep(2) #prevent qps error
 			compare_img(b64)
-			sleep(1) #prevent qps error
+			sleep(2) #prevent qps error
 		except TypeError as err:
 			print("Did not pass quality check: {0}".format(err))
 		
