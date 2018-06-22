@@ -19,7 +19,6 @@ def my_callback(channel):
 def check_quality():
 	#taking photo of user to process into api
 	print "------------Starting up camera--------------"
-	camera = PiCamera()
 	camera.start_preview()
 	sleep(2)
 	camera.capture('image.jpg')
@@ -52,6 +51,7 @@ def check_quality():
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
 GPIO.setup(25, GPIO.IN)    # set GPIO 25 as input
 GPIO.add_event_detect(25, GPIO.RISING, callback=my_callback, bouncetime=200)
+camera = PiCamera()
 ##########################3
 
 
