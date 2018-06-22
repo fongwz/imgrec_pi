@@ -2,6 +2,8 @@ from PIL import Image
 import requests
 import base64
 import json
+from picamera import PiCamera
+from time import sleep
 
 #"https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&h=350" sample url
 def getBool(prompt):
@@ -12,12 +14,19 @@ def getBool(prompt):
 			print "Please input y/n only."
 
 def createFace():
-	#opening the image
+	print "------------Starting up camera--------------"
+	camera = PiCamera()
+	camera.start_preview()
+	sleep(2)
+	camera.capture('image.jpg')
+	camera.stop_preview()
+	print "------------Picture taken...----------------"
+
+	#encoding the image
 	jpgfile = open("image.jpg",'rb')
 	jpgdata = jpgfile.read()
 	b64_1 = base64.b64encode(jpgdata)
 
-	#print("encoded image : %s" %b64_1)
 
 	url="https://api-us.faceplusplus.com/facepp/v3/detect"
 	payload={
