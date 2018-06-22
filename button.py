@@ -45,6 +45,8 @@ def check_quality():
 
 	data = json.loads(response.text)
 	print(data)
+	print(data["faces"][0]["facequality"]["value"])
+	print(data["faces"][0]["facequality"]["threshold"])
 	print "---------------------------------------"
 	try:
 		if not data["faces"]:
