@@ -2,6 +2,7 @@ from PIL import Image
 import requests
 import base64
 import json
+import sys
 from picamera import PiCamera
 from time import sleep
 
