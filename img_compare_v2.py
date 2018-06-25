@@ -114,7 +114,7 @@ def compare_img(b64):
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
 GPIO.setup(25, GPIO.IN)    # set GPIO 25 as input
 GPIO.setup(12, GPIO.OUT, initial = 0)   # green led
-GPIO.setup(7, GPIO.out, initial = 0)	# red led
+GPIO.setup(7, GPIO.OUT, initial = 0)	# red led
 GPIO.add_event_detect(25, GPIO.RISING, callback=my_callback, bouncetime=200)
 camera = PiCamera()
 ###########################
