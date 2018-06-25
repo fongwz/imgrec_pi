@@ -13,6 +13,9 @@ from time import sleep
 flag = 0;
 #################################################
 
+def clear_LED():
+	GPIO.output(12, 0)
+	GPIO.output(7, 0)
 
 def my_callback(channel):
 	global flag
@@ -100,6 +103,7 @@ def compare_img(b64):
 				GPIO.output(12, 1)
 			else :
 				print "no match for face in faceset"
+				GPIO.output(7, 1)
 			retry = False;
 		except KeyError as err:
 			print "Concurrency limit occurred, trying again after sleeping for 2s..."
@@ -109,7 +113,8 @@ def compare_img(b64):
 ##########setup############
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
 GPIO.setup(25, GPIO.IN)    # set GPIO 25 as input
-GPIO.setup(12, GPIO.OUT)   # set GPIO 12 as output
+GPIO.setup(12, GPIO.OUT, initial = 0)   # green led
+GPIO.setup(7, GPIO.out, initial = 0)	# red led
 GPIO.add_event_detect(25, GPIO.RISING, callback=my_callback, bouncetime=200)
 camera = PiCamera()
 ###########################
@@ -120,7 +125,7 @@ try:
 	while(1):
 		if flag == 1:
 			print "handled event"
-			GPIO.output(12, 0)
+			clear_LED()
 			try:
 				truefalse, b64 = check_quality()
 				sleep(2) #prevent qps error
@@ -128,7 +133,7 @@ try:
 				sleep(2) #prevent qps error
 			except TypeError as err:
 				print("Did not pass quality check: {0}".format(err))
-			
+				GPIO.output(7, 1)
 			flag = 0
 			print "cleared flag"
 except KeyboardInterrupt:
