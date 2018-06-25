@@ -24,7 +24,7 @@ def check_quality():
 	#taking photo of user to process into api
 	print "------------Starting up camera--------------"
 	camera.start_preview()
-	sleep(2)
+	sleep(5)
 	camera.capture('image.jpg')
 	camera.stop_preview()
 	print "------------Picture taken...----------------"
@@ -97,6 +97,7 @@ def compare_img(b64):
 			print "---------------------------------------------"
 			if data["results"][0]["confidence"] > 87.0:
 				print("Matched face with user_id: %s at confidence level: %f" % (data["results"][0]["user_id"], data["results"][0]["confidence"]))
+				GPIO.output(12, 1)
 			else :
 				print "no match for face in faceset"
 			retry = False;
@@ -108,6 +109,7 @@ def compare_img(b64):
 ##########setup############
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
 GPIO.setup(25, GPIO.IN)    # set GPIO 25 as input
+GPIO.setup(12, GPIO.OUT)   # set GPIO 12 as output
 GPIO.add_event_detect(25, GPIO.RISING, callback=my_callback, bouncetime=200)
 camera = PiCamera()
 ###########################
