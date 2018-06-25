@@ -117,10 +117,10 @@ camera = PiCamera()
 
 #########main loop#########
 try:
-	GPIO.output(12, 1)
 	while(1):
 		if flag == 1:
 			print "handled event"
+			GPIO.output(12, 0)
 			try:
 				truefalse, b64 = check_quality()
 				sleep(2) #prevent qps error
