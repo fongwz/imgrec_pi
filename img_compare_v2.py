@@ -116,17 +116,20 @@ camera = PiCamera()
 
 
 #########main loop#########
-while(1):
-	if flag == 1:
-		print "handled event"
-		try:
-			truefalse, b64 = check_quality()
-			sleep(2) #prevent qps error
-			compare_img(b64)
-			sleep(2) #prevent qps error
-		except TypeError as err:
-			print("Did not pass quality check: {0}".format(err))
-		
-		flag = 0
-		print "cleared flag"
+try:
+	while(1):
+		if flag == 1:
+			print "handled event"
+			try:
+				truefalse, b64 = check_quality()
+				sleep(2) #prevent qps error
+				compare_img(b64)
+				sleep(2) #prevent qps error
+			except TypeError as err:
+				print("Did not pass quality check: {0}".format(err))
+			
+			flag = 0
+			print "cleared flag"
+except KeyboardInterrupt:
+	GPIO.cleanup()
 ###########################
