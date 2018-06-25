@@ -109,7 +109,7 @@ def compare_img(b64):
 ##########setup############
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
 GPIO.setup(25, GPIO.IN)    # set GPIO 25 as input
-GPIO.setup(12, GPIO.OUT, initial=1)   # set GPIO 12 as output
+GPIO.setup(12, GPIO.OUT)   # set GPIO 12 as output
 GPIO.add_event_detect(25, GPIO.RISING, callback=my_callback, bouncetime=200)
 camera = PiCamera()
 ###########################
@@ -117,6 +117,7 @@ camera = PiCamera()
 
 #########main loop#########
 try:
+	GPIO.output(12, 1)
 	while(1):
 		if flag == 1:
 			print "handled event"
