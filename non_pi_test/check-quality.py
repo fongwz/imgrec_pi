@@ -36,7 +36,7 @@ payload={
 #else :
 #	print
 
-url = "http://localhost:5000/handsup"
+url = "http://192.168.1.191:5000/handsup"
 response = requests.post(url, data=payload)
 print(response.text)
 print(response.status_code, response.reason)
