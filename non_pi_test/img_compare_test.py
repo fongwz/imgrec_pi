@@ -17,7 +17,7 @@ faceset_token = data["facesets"][0]["faceset_token"]
 print "---------------------------------------------"
 
 #search faceset for highest compatibility face
-jpgfile = open("test2.jpg",'rb')
+jpgfile = open("./image.jpg",'rb')
 jpgdata = jpgfile.read()
 b64 = base64.b64encode(jpgdata)
 

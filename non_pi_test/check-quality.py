@@ -2,19 +2,8 @@ from PIL import Image
 import requests
 import base64
 import json
-#from picamera import PiCamera
-#from time import sleep
 
-#taking photo of user to process into api
-#print "------------Starting up camera--------------"
-#camera = PiCamera()
-#camera.start_preview()
-#sleep(2)
-#camera.capture('image.jpg')
-#camera.stop_preview()
-#print "------------Picture taken...----------------"
-
-jpgfile = open("../image.jpg",'rb')
+jpgfile = open("./faces/1.jpg",'rb')
 jpgdata = jpgfile.read()
 b64 = base64.b64encode(jpgdata)
 
@@ -25,18 +14,23 @@ payload={
 		,'image_base64': "omega"
 		,'return_attributes':"facequality"
 		}
-#response = requests.post(url, data=payload)
-#print(response.status_code, response.reason)
 
-#data = json.loads(response.text)
-#print(data)
-#print "---------------------------------------"
-#if not data["faces"]:
-#	print("no faces found")
-#else :
-#	print
 
-url = "http://192.168.1.191:5000/handsup"
-response = requests.post(url, data=payload)
-print(response.text)
-print(response.status_code, response.reason)
+
+
+
+print "------------------------------------"
+
+#Sending data to backend to update db
+url = "http://192.168.1.191:5000/create"
+response = requests.post(url,
+headers = { 'Content-type': 'application/json'},
+data = json.dumps({
+	'Description':'Information',
+	'Keywords':'Information',
+    'name': 'asd',
+    'face_token': 'bss',
+    'body': b64
+    })
+) 
+print response.text

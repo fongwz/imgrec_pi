@@ -5,6 +5,7 @@ import json
 import sys
 from time import sleep
 
+
 def getBool(prompt):
 	while True:
 		try:
@@ -13,11 +14,11 @@ def getBool(prompt):
 			print "Please input y/n only."
 
 def createFace():
+
 	#encoding the image
 	jpgfile = open("./faces/3.jpg",'rb')
 	jpgdata = jpgfile.read()
 	b64_1 = base64.b64encode(jpgdata)
-
 
 	url="https://api-us.faceplusplus.com/facepp/v3/detect"
 	payload={
@@ -58,11 +59,27 @@ def createFace():
 	print(data)
 	print("Token and id generated: %s ; %s" % (token,name))
 	print "----------------------------------------"
-	return token,name
+
+	return token,name,b64_1
 
 
-def addToFaceSet(faceset_token, face_token):
+def addToFaceSet(faceset_token, face_token, encoding, name):
 	if getBool("Do you want to add this person into the faceset?(y/n) "):
+
+		#updating LOCAL db
+		url = "http://192.168.1.191:5000/create"
+		response = requests.post(url,
+		headers = { 'Content-type': 'application/json'},
+		data = json.dumps({
+		    'name': name,
+		    'facetoken': face_token,
+		    'body': encoding
+		    })
+		) 
+		print response.text
+		print "-----------------------------------------------------------------"
+
+		#updating FPP db
 		print "Now adding new face to faceset"
 		url="https://api-us.faceplusplus.com/facepp/v3/faceset/addface"
 		payload={
@@ -120,14 +137,15 @@ def checkFaceSetEmpty(faceset_token):
 #######################main program###########################
 
 try:
-	face_token,name = createFace()
+	face_token,name,encoding = createFace()
 	print "Successfully generated token and name :)"
 	sleep(1)
 except TypeError as err:
 	print("Could not generate a token or name: {0}".format(err))
 	sys.exit()
-except:
-	print "Unexpected error"
+#except:
+#	print "unexpected error"
+
 
 #get the faceset
 url="https://api-us.faceplusplus.com/facepp/v3/faceset/getfacesets"
@@ -148,6 +166,6 @@ if not checkFaceSetEmpty(faceset_token):
 	if checkFaceExists(faceset_token, face_token):
 		print "Processing..."
 		sleep(1)
-		addToFaceSet(faceset_token, face_token)
+		addToFaceSet(faceset_token, face_token, encoding, name)
 else:
-	addToFaceSet(faceset_token, face_token)
+	addToFaceSet(faceset_token, face_token, encoding, name)
