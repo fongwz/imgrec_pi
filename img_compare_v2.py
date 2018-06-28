@@ -36,15 +36,26 @@ def check_quality():
 	jpgdata = jpgfile.read()
 	b64 = base64.b64encode(jpgdata)
 
-	url="https://api-us.faceplusplus.com/facepp/v3/detect"
-	payload={
-			'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
-			,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
-			,'image_base64': b64
-			,'return_attributes':"facequality"
-			}
-	response = requests.post(url, data=payload)
-	print(response.status_code, response.reason)
+	retry = True;
+	retryCount = 0;
+	
+	while retry and retryCount<10:
+		url="https://api-us.faceplusplus.com/facepp/v3/detect"
+		payload={
+				'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
+				,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
+				,'image_base64': b64
+				,'return_attributes':"facequality"
+				}
+		response = requests.post(url, data=payload)
+		print(response.status_code, response.reason)
+		if(response.status_code == 200):
+			retryCount=0
+			break
+		else:
+			retryCount+=1
+			print("request failed, retrying %d out of 10 times" % retryCount)
+		sleep(2)
 
 	data = json.loads(response.text)
 	print(data)
@@ -83,54 +94,61 @@ def compare_img(b64):
 
 	print "now comparing..."
 	retry = True;
-	while retry:
-		try:
-			url="https://api-us.faceplusplus.com/facepp/v3/search"
+	retryCount = 0;
+	while retry and retryCount < 10:
+		url="https://api-us.faceplusplus.com/facepp/v3/search"
+		payload={
+				'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
+				,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
+				,'image_base64': b64
+				,'faceset_token': faceset_token
+				,'return_result_count': 5	
+				}
+		response = requests.post(url, data=payload)
+		print(response.status_code, response.reason)
+		if(response.status_code == 200):
+			retryCount=0
+			break
+		else:
+			retryCount+=1
+			print("request failed, retrying %d out of 10 times" % retryCount)
+		sleep(2)
+
+	try:
+		data = json.loads(response.text)
+		print(data)
+		print "---------------------------------------------"
+		if data["results"][0]["confidence"] > 87.0:
+			print("Matched face with user_id: %s at confidence level: %f" % (data["results"][0]["user_id"], data["results"][0]["confidence"]))
 			payload={
-					'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
-					,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
-					,'image_base64': b64
-					,'faceset_token': faceset_token
-					,'return_result_count': 5	
-					}
+					'comparison_token':data["faces"][0]["face_token"],
+					'comparison_image':b64,
+					'user_id':data["results"][0]["user_id"],
+					'face_token':data["results"][0]["face_token"],
+					'confidence':data["results"][0]["confidence"]
+			}
+			url = "http://192.168.1.191:5000/compare"
 			response = requests.post(url, data=payload)
+			print(response.text)
 			print(response.status_code, response.reason)
-			data = json.loads(response.text)
-			print(data)
-			print "---------------------------------------------"
-			if data["results"][0]["confidence"] > 87.0:
-				print("Matched face with user_id: %s at confidence level: %f" % (data["results"][0]["user_id"], data["results"][0]["confidence"]))
-				payload={
-						'comparison_token':data["faces"][0]["face_token"],
-						'comparison_image':b64,
-						'user_id':data["results"][0]["user_id"],
-						'face_token':data["results"][0]["face_token"],
-						'confidence':data["results"][0]["confidence"]
-				}
-				url = "http://192.168.1.191:5000/compare"
-				response = requests.post(url, data=payload)
-				print(response.text)
-				print(response.status_code, response.reason)
-				GPIO.output(12, 1)
-			else :
-				print "no match for face in faceset"
-				payload={
-						'comparison_token':data["faces"][0]["face_token"],
-						'comparison_image':b64,
-						'user_id':data["results"][0]["user_id"],
-						'face_token':data["results"][0]["face_token"],
-						'confidence':data["results"][0]["confidence"]
-				}
-				url = "http://192.168.1.191:5000/compare"
-				response = requests.post(url, data=payload)
-				print(response.text)
-				print(response.status_code, response.reason)
-				GPIO.output(7, 1)
-			retry = False;
-		except KeyError as err:
-			print "Concurrency limit occurred, trying again after sleeping for 2s..."
-			retry = True;
-			sleep(2)
+			GPIO.output(12, 1)
+		else :
+			print "no match for face in faceset"
+			payload={
+					'comparison_token':data["faces"][0]["face_token"],
+					'comparison_image':b64,
+					'user_id':data["results"][0]["user_id"],
+					'face_token':data["results"][0]["face_token"],
+					'confidence':data["results"][0]["confidence"]
+			}
+			url = "http://192.168.1.191:5000/compare"
+			response = requests.post(url, data=payload)
+			print(response.text)
+			print(response.status_code, response.reason)
+			GPIO.output(7, 1)
+	except KeyError as err:
+		print "max requests timeout error"
+		sleep(2)
 
 ##########setup############
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  

@@ -28,15 +28,30 @@ def createFace():
 	jpgdata = jpgfile.read()
 	b64_1 = base64.b64encode(jpgdata)
 
-	url="https://api-us.faceplusplus.com/facepp/v3/detect"
-	payload={
-			'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
-			,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
-			,'image_base64': b64_1
-			,'return_attributes':"gender,age,smiling,ethnicity"
-			}
-	response = requests.post(url, data=payload)
-	print(response.status_code, response.reason)
+	retry = True
+	retryCount = 0
+
+	while retry and retryCount < 10:
+		url="https://api-us.faceplusplus.com/facepp/v3/detect"
+		payload={
+				'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
+				,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
+				,'image_base64': b64_1
+				,'return_attributes':"gender,age,smiling,ethnicity"
+				}
+		response = requests.post(url, data=payload)
+		print(response.status_code, response.reason)
+		if(response.status_code == 200):
+			retryCount=0
+			break
+		else:
+			retryCount+=1
+			print("request failed, retrying %d out of 10 times" % retryCount)
+		sleep(2)
+
+	if(retryCount >= 10):
+		print "Timeout error"
+		return
 
 	data = json.loads(response.text)
 	print(data)
@@ -54,15 +69,28 @@ def createFace():
 	name = raw_input("Enter name of person: ")
 
 	#generate user-id for detected image
-	url="https://api-us.faceplusplus.com/facepp/v3/face/setuserid"
-	payload={
-			'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
-			,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
-			,'face_token': token
-			,'user_id': name
-			}
-	response = requests.post(url, data=payload)
-	print(response.status_code, response.reason)
+	while retry and retryCount < 10:
+		url="https://api-us.faceplusplus.com/facepp/v3/face/setuserid"
+		payload={
+				'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
+				,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
+				,'face_token': token
+				,'user_id': name
+				}
+		response = requests.post(url, data=payload)
+		print(response.status_code, response.reason)
+		if(response.status_code == 200):
+			retryCount=0
+			break
+		else:
+			retryCount+=1
+			print("request failed, retrying %d out of 10 times" % retryCount)
+		sleep(2)
+	
+	if(retryCount >= 10):
+		print "Timeout error"
+		return
+
 	data = json.loads(response.text)
 	print(data)
 	print("Token and id generated: %s ; %s" % (token,name))
@@ -88,16 +116,31 @@ def addToFaceSet(faceset_token, face_token, encoding, name):
 		print "-----------------------------------------------------------------"
 
 		#updating FPP db
+		retry = True
+		retryCount = 0
 		print "Now adding new face to faceset"
-		url="https://api-us.faceplusplus.com/facepp/v3/faceset/addface"
-		payload={
-				'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
-				,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"
-				,'faceset_token':faceset_token
-				,'face_tokens':face_token			
-				}
-		response = requests.post(url, data=payload)
-		print(response.status_code, response.reason)
+		while retry and retryCount < 10:
+			url="https://api-us.faceplusplus.com/facepp/v3/faceset/addface"
+			payload={
+					'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
+					,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"
+					,'faceset_token':faceset_token
+					,'face_tokens':face_token			
+					}
+			response = requests.post(url, data=payload)
+			print(response.status_code, response.reason)
+			if(response.status_code == 200):
+				retryCount=0
+				break
+			else:
+				retryCount+=1
+				print("request failed, retrying %d out of 10 times" % retryCount)
+			sleep(2)
+
+		if(retryCount >= 10):
+			print "Timeout error, please add the face manually to FPP's faceset."
+			return
+
 		print(json.loads(response.text))
 		print "Successfully added face to faceset :)"
 	else:
@@ -107,15 +150,32 @@ def addToFaceSet(faceset_token, face_token, encoding, name):
 
 def checkFaceExists(faceset_token, face_token):
 	print "Checking if face exists in faceset.."
-	url="https://api-us.faceplusplus.com/facepp/v3/search"
-	payload={
-			'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
-			,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"
-			,'face_token':face_token
-			,'faceset_token':faceset_token			
-			}
-	response = requests.post(url, data=payload)
-	print(response.status_code, response.reason)
+
+	retry = True
+	retryCount = 0
+
+	while retry and retryCount < 10:
+		url="https://api-us.faceplusplus.com/facepp/v3/search"
+		payload={
+				'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
+				,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"
+				,'face_token':face_token
+				,'faceset_token':faceset_token			
+				}
+		response = requests.post(url, data=payload)
+		print(response.status_code, response.reason)
+		if(response.status_code == 200):
+			retryCount=0
+			break
+		else:
+			retryCount+=1
+			print("request failed, retrying %d out of 10 times" % retryCount)
+		sleep(2)
+
+	if(retryCount >= 10):
+		print "Timeout error"
+		return
+
 	data = json.loads(response.text)
 	print("threshold for user: %s is at: %f" % (data["results"][0]["user_id"], data["results"][0]["confidence"]))
 	#set duplicate threshold to be 87%
@@ -128,14 +188,30 @@ def checkFaceExists(faceset_token, face_token):
 	return
 
 def checkFaceSetEmpty(faceset_token):
-	url="https://api-us.faceplusplus.com/facepp/v3/faceset/getdetail"
-	payload={
-			'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
-			,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"
-			,'faceset_token':faceset_token	
-			}
-	response = requests.post(url, data=payload)
-	print(response.status_code, response.reason)
+	retry = True
+	retryCount = 0
+
+	while retry and retryCount < 10:
+		url="https://api-us.faceplusplus.com/facepp/v3/faceset/getdetail"
+		payload={
+				'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
+				,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"
+				,'faceset_token':faceset_token	
+				}
+		response = requests.post(url, data=payload)
+		print(response.status_code, response.reason)
+		if(response.status_code == 200):
+			retryCount=0
+			break
+		else:
+			retryCount+=1
+			print("request failed, retrying %d out of 10 times" % retryCount)
+		sleep(2)
+
+	if(retryCount >= 10):
+		print "Timeout error"
+		return
+
 	data = json.loads(response.text)
 	if not data["face_tokens"]:
 		return True
@@ -156,13 +232,28 @@ except TypeError as err:
 
 
 #get the faceset
-url="https://api-us.faceplusplus.com/facepp/v3/faceset/getfacesets"
-payload={
-		'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
-		,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
-		}
-response = requests.post(url, data=payload)
-print(response.status_code, response.reason)
+retry = True
+retryCount = 0
+
+while retry and retryCount < 10:
+	url="https://api-us.faceplusplus.com/facepp/v3/faceset/getfacesets"
+	payload={
+			'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
+			,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
+			}
+	response = requests.post(url, data=payload)
+	print(response.status_code, response.reason)
+	if(response.status_code == 200):
+		retryCount=0
+		break
+	else:
+		retryCount+=1
+		print("request failed, retrying %d out of 10 times" % retryCount)
+	sleep(2)
+		
+if(retryCount >= 10):
+	print "Timeout error"
+	sys.exit()
 
 data = json.loads(response.text)
 print("Obtained faceset token: %s" %data["facesets"][0]["faceset_token"])

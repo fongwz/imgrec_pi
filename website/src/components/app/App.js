@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import {View} from './../view/view.js'
 import {Compare} from './../compare/compare.js'
 import './../../css/assets/css/main.css'
-import axios from 'axios';
-import Pusher from 'pusher-js';
 
 class App extends Component {
   constructor(){
