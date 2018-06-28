@@ -78,14 +78,25 @@ def check_quality():
 
 def compare_img(b64):
 	#get faceset token first
-	print "getting faceset token..."
-	url="https://api-us.faceplusplus.com/facepp/v3/faceset/getfacesets"
-	payload={
-			'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
-			,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
-			}
-	response = requests.post(url, data=payload)
-	print(response.status_code, response.reason)
+	retry = True;
+	retryCount = 0;
+	while retry and retryCount < 10:
+		print "getting faceset token..."
+		url="https://api-us.faceplusplus.com/facepp/v3/faceset/getfacesets"
+		payload={
+				'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
+				,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"   
+				}
+		response = requests.post(url, data=payload)
+		print(response.status_code, response.reason)
+		if(response.status_code == 200):
+			retryCount=0
+			break
+		else:
+			retryCount+=1
+			print("request failed, retrying %d out of 10 times" % retryCount)
+		sleep(2)
+		
 	data = json.loads(response.text)
 	print("Faceset token is: %s" % data["facesets"][0]["faceset_token"])
 	faceset_token = data["facesets"][0]["faceset_token"]
