@@ -12,28 +12,11 @@ class App extends Component {
       view: false,  
       compare: false
     }
-
     this.componentCallBack = this.componentCallBack.bind(this)
   }
 
-  componentCallBack(name, state){
+  componentCallBack(name, state) {
     this.setState({[name]: state});
-  }
-
-  componentDidMount(){
-    const pusher = new Pusher('ac944354925fa2b30b7e', {
-      cluster: 'ap1',
-      encrypted: true
-    });
-    const channel = pusher.subscribe('imgrec');
-    channel.bind('message', data => {
-      console.log(data)
-    });
-    const payload = {
-      username: "hia",
-      message: "be"
-    }
-    axios.post('http://localhost:5000/message', payload);
   }
 
   render() {

@@ -20,7 +20,7 @@ payload={
 		'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
 		,'api_secret':"lQ6frS9V67fLRE1mJjskziK7pyoJC2gN"
 		,'faceset_token':faceset_token
-		,'face_tokens':"2487c7387df5d2cdc11adbe77812c0fd"	
+		,'face_tokens':"2b70d128d3e6a7030b2a23393e0eff2b"	
 		}
 response = requests.post(url, data=payload)
 print(response.status_code, response.reason)

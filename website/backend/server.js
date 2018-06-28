@@ -3,12 +3,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const fs = require('fs');
-const imgdir = '../../faces';
+const path = require('path');
+const imgdir = '../public/comparisons';
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.set('PORT', process.env.PORT || 5000);
 
 //connecting to db
@@ -45,7 +47,7 @@ const pusher = new Pusher({
 //test route
 app.post('/message', (req, res) => {
   const payload = req.body;
-  pusher.trigger('imgrec', 'message', payload);
+  pusher.trigger('imgrec', 'test', payload);
   res.send(payload)
 });
 
@@ -88,9 +90,38 @@ app.post('/viewall', (req, res) => {
 });
 
 app.post('/compare', (req, res)=> {
-  const payload = req.body;
-  pusher.trigger('imgrec', 'message', payload);
-  res.send(payload)
+  
+  const facetoken= req.body.comparison_token
+  const imagedata = req.body.comparison_image
+
+  //remove all files in comparisons folder
+  fs.readdir(imgdir, (err, files) => {
+    if(err){
+      console.log(err)
+    }
+    for(const file of files){
+      fs.unlink(path.join(imgdir, file), err => {
+        if (err) throw err;
+      });
+    }
+  })
+
+  //add file to local comparisons folder
+  fs.writeFile(imgdir+"/"+facetoken+".png",imagedata,'base64',function(err){
+    if(err) {
+      console.log(err)
+    }
+  })
+
+  const payload = {
+    'comparison_token': facetoken,  
+    'user_id': req.body.user_id,
+    'face_token': req.body.face_token,
+    'confidence': req.body.confidence
+  }
+
+  pusher.trigger('imgrec', 'comparison', payload)
+  res.send("YES OK VERY GOOD")
 });
 
 

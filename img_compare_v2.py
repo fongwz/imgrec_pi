@@ -100,6 +100,17 @@ def compare_img(b64):
 			print "---------------------------------------------"
 			if data["results"][0]["confidence"] > 87.0:
 				print("Matched face with user_id: %s at confidence level: %f" % (data["results"][0]["user_id"], data["results"][0]["confidence"]))
+				payload={
+						'comparison_token':data["faces"][0]["face_token"],
+						'comparison_image':b64,
+						'user_id':data["results"][0]["user_id"],
+						'face_token':data["results"][0]["face_token"],
+						'confidence':data["results"][0]["confidence"]
+				}
+				url = "http://192.168.1.191:5000/compare"
+				response = requests.post(url, data=payload)
+				print(response.text)
+				print(response.status_code, response.reason)
 				GPIO.output(12, 1)
 			else :
 				print "no match for face in faceset"

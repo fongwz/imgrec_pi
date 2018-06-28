@@ -57,10 +57,10 @@ export class ViewDisplay extends React.Component{
 		this.facedetails.splice(0,this.facedetails.length)
 
 		this.faceimage.push(
-			<img src={require('../../faces/' + token + '.png')} key={token + '1'} />
+			<img src={'/faces/' + token + '.png'} key={token + '1'} alt="blank"/>
 			);
 		this.facedetails.push(
-			<section>
+			<section key={token+name+'1'}>
 				<p>Name: {name}</p>
 				<p>Token: {token}</p>
 			</section>

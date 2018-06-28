@@ -663,7 +663,10 @@ table.alt tbody tr td :hover{
 /* Highlights */
 .highlights {
   width: 100%;
-  margin: 4.5rem ;
+  margin-top: 4.5rem ;
+  margin-left: 4.5rem;
+  margin-right:4.5rem;
+  margin-bottom: -5%;
   display: -moz-flex;
   display: -webkit-flex;
   display: -ms-flex;
@@ -1146,7 +1149,7 @@ ul.actions {
     .row.gtr-50.gtr-uniform > * {
       padding-top: 1.5rem; }
 .row {
-  margin-top: 0;
+  margin-top: -5%;
   margin-left: -3rem; }
   .row > * {
     padding: 0 0 0 3rem; }
