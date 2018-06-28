@@ -691,7 +691,6 @@ table.alt tbody tr td :hover{
   .highlights > * {
     width: 50%; }
   .highlights > * {
-    padding: 2.5rem;
     width: calc(42% + 1rem); }
   .highlights2 > :nth-child(1){
     padding-left: 1%;

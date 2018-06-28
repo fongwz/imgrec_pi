@@ -33,6 +33,8 @@ export class CompareDisplay extends React.Component{
 	render(){
 		var imgTaken = (<section>{this.piImage}</section>);
 		var imgResult = (<section>{this.dbImage}</section>);
+		var passFail = (this.state.confidence>87?<h3>Success</h3>:<h3>Failure</h3>);
+
 		return(
 			<div className="row">
 				<div className="col-6 col-12-medium">
@@ -50,6 +52,7 @@ export class CompareDisplay extends React.Component{
 					<div className="highlights">
 						<h3>Confidence level: {this.state.confidence}</h3>
 						<h3>Matched with: {this.state.user_id}</h3>
+						{passFail}
 					</div>
 				}
 			</div>
