@@ -25,6 +25,10 @@ class App extends Component {
     }
   }
 
+  componentWillUpdate(){
+    console.log(this.state.view, this.state.compare)
+  }
+
   render() {
     let view;
     if(!this.state.view && !this.state.compare){

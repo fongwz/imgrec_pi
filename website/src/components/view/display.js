@@ -50,7 +50,6 @@ export class ViewDisplay extends React.Component{
 	}
 
 	handleClick(e){
-		this.setState({loadingImage: true})
 		var token = e.currentTarget.getAttribute('face-token')
 		var name = e.currentTarget.getAttribute('face-name')
 		this.faceimage.splice(0,this.faceimage.length)
@@ -65,7 +64,7 @@ export class ViewDisplay extends React.Component{
 				<p>Token: {token}</p>
 			</section>
 			);
-		this.setState({loadingImage: false})
+		this.forceUpdate()
 	}
 
 	render(){
