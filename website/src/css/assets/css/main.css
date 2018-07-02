@@ -724,6 +724,8 @@ table.alt tbody tr td :hover{
     border-width: 1px;
     border-radius: 1rem;
     border-color: #F6DFDA;
+    -webkit-transition: border-color 0.3s;
+    transition-timing-function: linear;
     cursor: pointer;
   }
 
@@ -2464,7 +2466,11 @@ body {
     height: inherit;
     line-height: inherit;
     padding: 0 1.25rem;
-    text-decoration: none; }
+    opacity: 0.5;
+    text-decoration: none; 
+    -webkit-transition: opacity 0.5s;}
+  #header > .logo:hover {
+    opacity: 1; }
   #header > nav > a {
     color: inherit;
     display: inline-block;

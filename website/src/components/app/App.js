@@ -17,6 +17,14 @@ class App extends Component {
     this.setState({[name]: state});
   }
 
+  shouldComponentUpdate(){
+    if(!this.state.view || !this.state.compare){
+      return true
+    } else {
+      return false
+    }
+  }
+
   render() {
     let view;
     if(!this.state.view && !this.state.compare){
@@ -29,8 +37,13 @@ class App extends Component {
     } else if(this.state.view){ view=(<View open={true} callBack={this.componentCallBack} />); 
     } else if(this.state.compare){ view=(<Compare open={true} callBack={this.componentCallBack} />); }
 
+    console.log(this.state.view, this.state.compare)
+
     return (
         <section className="wrapper">
+          <header id="header">
+            <a className="logo" href="index.html">Home</a>
+          </header>
           <div className="inner">
             {view}
           </div>

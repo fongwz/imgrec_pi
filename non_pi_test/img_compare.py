@@ -31,7 +31,8 @@ while retry and retryCount < 10:
 	else:
 		retryCount+=1
 		print("request failed, retrying %d out of 10 times" % retryCount)
-	sleep(1)
+		print(response.text)
+	sleep(2)
 	
 	
 data = json.loads(response.text)
@@ -46,7 +47,7 @@ b64 = base64.b64encode(jpgdata)
 print "Processing..."
 sleep(1)
 
-while retry and retryCount <= 5:
+while retry and retryCount < 10:
 	url="https://api-us.faceplusplus.com/facepp/v3/search"
 	payload={
 			'api_key':"_eLSJf561NiuuGdVKpahOF8soZpl7213"
@@ -57,7 +58,7 @@ while retry and retryCount <= 5:
 			}
 	response = requests.post(url, data=payload)
 	print(response.status_code, response.reason)
-	sleep(1)
+	sleep(2)
 	retryCount+=1
 	if(response.status_code == 200):
 		retryCount=0

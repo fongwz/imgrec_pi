@@ -37,6 +37,7 @@ export class CompareDisplay extends React.Component{
 
 		return(
 			<div className="row">
+				
 				<div className="col-6 col-12-medium">
 					<h1>Image taken</h1>
 					{imgTaken}

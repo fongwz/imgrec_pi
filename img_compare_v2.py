@@ -54,6 +54,7 @@ def check_quality():
 			break
 		else:
 			retryCount+=1
+			console.log(response.text)
 			print("request failed, retrying %d out of 10 times" % retryCount)
 		sleep(2)
 
@@ -94,6 +95,7 @@ def compare_img(b64):
 			break
 		else:
 			retryCount+=1
+			console.log(response.text)
 			print("request failed, retrying %d out of 10 times" % retryCount)
 		sleep(2)
 		
