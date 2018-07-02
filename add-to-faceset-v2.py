@@ -46,7 +46,7 @@ def createFace():
 			break
 		else:
 			retryCount+=1
-			console.log(response.text)
+			print(response.text)
 			print("request failed, retrying %d out of 10 times" % retryCount)
 		sleep(2)
 
